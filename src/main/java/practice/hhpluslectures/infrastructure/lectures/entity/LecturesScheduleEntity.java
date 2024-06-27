@@ -6,7 +6,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import practice.hhpluslectures.infrastructure.common.BaseTimeEntity;
@@ -14,6 +16,7 @@ import practice.hhpluslectures.service.lectures.domain.LecturesSchedule;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LecturesScheduleEntity extends BaseTimeEntity {
 
   @Id
@@ -37,6 +40,17 @@ public class LecturesScheduleEntity extends BaseTimeEntity {
   @NotNull
   @Comment("특강 고유 번호")
   private Long lecturesId;
+
+  public static LecturesScheduleEntity empty() {
+    return new LecturesScheduleEntity();
+  }
+
+  public LecturesScheduleEntity(LocalDateTime openAt, String title, Integer currentCapacity, Long lecturesId) {
+    this.openAt = openAt;
+    this.title = title;
+    this.currentCapacity = currentCapacity;
+    this.lecturesId = lecturesId;
+  }
 
   public LecturesSchedule toDomain() {
     return LecturesSchedule.createLecturesSchedule(

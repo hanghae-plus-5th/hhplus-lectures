@@ -17,4 +17,9 @@ public class AccountRepositoryImpl implements AccountRepository {
         .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."))
         .toDomain();
   }
+
+  @Override
+  public Account save(String name) {
+    return accountJpaRepository.save(new AccountEntity(name)).toDomain();
+  }
 }

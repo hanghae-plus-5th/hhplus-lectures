@@ -5,4 +5,6 @@ import practice.hhpluslectures.service.account.domain.Account;
 public interface AccountRepository {
 
   Account getAccount(Long accountId);
+
+  Account save(String name);
 }

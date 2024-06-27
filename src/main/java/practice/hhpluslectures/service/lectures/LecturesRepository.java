@@ -1,6 +1,7 @@
 package practice.hhpluslectures.service.lectures;
 
 import java.util.List;
+import practice.hhpluslectures.service.lectures.domain.Lectures;
 import practice.hhpluslectures.service.lectures.domain.LecturesSchedule;
 import practice.hhpluslectures.service.lectures.domain.LecturesScheduleAccount;
 import practice.hhpluslectures.service.lectures.domain.LecturesScheduleAccountHistory;
@@ -20,4 +21,8 @@ public interface LecturesRepository {
   Integer updateLectureSchedulerByLectureSchedulerCurrentCapacity(Long lecturesScheduleId);
 
   boolean existsLectureSchedulerAccountByAccountIdAndLecturesScheduleId(Long accountId, Long lecturesScheduleId);
+
+  Lectures saveLectures(String url);
+
+  LecturesSchedule saveLecturesSchedule(LecturesSchedule lecturesSchedule);
 }
