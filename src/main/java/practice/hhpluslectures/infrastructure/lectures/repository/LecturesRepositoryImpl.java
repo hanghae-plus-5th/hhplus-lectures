@@ -5,10 +5,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import practice.hhpluslectures.infrastructure.lectures.entity.LecturesEntity;
+import org.springframework.transaction.annotation.Transactional;
 import practice.hhpluslectures.infrastructure.lectures.entity.LecturesScheduleAccountEntity;
 import practice.hhpluslectures.infrastructure.lectures.entity.LecturesScheduleAccountHistoryEntity;
 import practice.hhpluslectures.infrastructure.lectures.entity.LecturesScheduleEntity;
 import practice.hhpluslectures.service.lectures.LecturesRepository;
+import practice.hhpluslectures.service.lectures.domain.Lectures;
 import practice.hhpluslectures.service.lectures.domain.LecturesSchedule;
 import practice.hhpluslectures.service.lectures.domain.LecturesScheduleAccount;
 import practice.hhpluslectures.service.lectures.domain.LecturesScheduleAccountHistory;
@@ -18,6 +21,7 @@ import practice.hhpluslectures.service.lectures.domain.LecturesScheduleAccountHi
 public class LecturesRepositoryImpl implements LecturesRepository {
 
   private final LecturesScheduleJpaRepository lecturesScheduleJpaRepository;
+  private final LecturesJpaRepository lecturesJpaRepository;
   private final LecturesScheduleAccountHistoryJpaRepository lecturesScheduleAccountHistoryJpaRepository;
   private final LecturesScheduleAccountJpaRepository lecturesScheduleAccountJpaRepository;
 
@@ -39,8 +43,9 @@ public class LecturesRepositoryImpl implements LecturesRepository {
   }
 
   @Override
+  @Transactional
   public LecturesSchedule getLectureSchedulerByLectureSchedulerId(Long lecturesScheduleId) {
-    return lecturesScheduleJpaRepository.findById(lecturesScheduleId)
+    return lecturesScheduleJpaRepository.findByIdWithPessimisticLock(lecturesScheduleId)
         .orElseThrow(() -> new IllegalArgumentException("특강을 찾을 수 없습니다."))
         .toDomain();
   }
@@ -64,6 +69,23 @@ public class LecturesRepositoryImpl implements LecturesRepository {
   @Override
   public Integer updateLectureSchedulerByLectureSchedulerCurrentCapacity(Long lecturesScheduleId) {
     return lecturesScheduleJpaRepository.updateCurrentCapacity(lecturesScheduleId);
+  }
+
+  @Override
+  public Lectures saveLectures(String url) {
+    return lecturesJpaRepository.save(new LecturesEntity(url)).toDomain();
+  }
+
+  @Override
+  public LecturesSchedule saveLecturesSchedule(LecturesSchedule lecturesSchedule) {
+   return lecturesScheduleJpaRepository.save(
+        new LecturesScheduleEntity(
+            lecturesSchedule.openAt(),
+            lecturesSchedule.title(),
+            lecturesSchedule.currentCapacity(),
+            lecturesSchedule.lecturesId()
+        )
+    ).toDomain();
   }
 
   @Override

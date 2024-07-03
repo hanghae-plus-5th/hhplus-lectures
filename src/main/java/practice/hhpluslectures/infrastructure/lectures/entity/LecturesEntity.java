@@ -5,18 +5,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import practice.hhpluslectures.infrastructure.common.BaseTimeEntity;
+import practice.hhpluslectures.service.lectures.domain.Lectures;
 
 @Getter
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LecturesEntity extends BaseTimeEntity {
 
   @Id
@@ -27,4 +27,13 @@ public class LecturesEntity extends BaseTimeEntity {
   @NotNull
   @Comment("특강 영상 url")
   private String lecturesVideoUrl;
+
+  public LecturesEntity(String lecturesVideoUrl) {
+    this.lecturesVideoUrl = lecturesVideoUrl;
+  }
+
+  public Lectures toDomain() {
+    return Lectures.createLectures(this.id, this.lecturesVideoUrl);
+  }
+
 }
